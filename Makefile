@@ -1,0 +1,20 @@
+.PHONY: all start stop product db
+
+# Start all services and databases
+all: db start
+
+# Start services
+start: product
+
+# Start product with hot reload
+product:
+	cd services/product && air
+
+# Start databases using Docker Compose
+db:
+	docker-compose up -d
+
+# Stop all services and databases
+stop:
+	docker-compose down
+	pkill -f 'air'
