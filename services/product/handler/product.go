@@ -42,7 +42,7 @@ func (h *Handler) CreateProduct(c echo.Context) error {
 		return err
 	}
 
-	id, err := h.ProductService.Create(c.Request().Context(), &model.Product{
+	id, err := h.ProductRepository.Create(c.Request().Context(), &model.Product{
 		Name:      p.Name,
 		Price:     p.Price,
 		Available: p.Available,
@@ -51,7 +51,7 @@ func (h *Handler) CreateProduct(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	product, err := h.ProductService.FindById(c.Request().Context(), strconv.FormatUint(uint64(*id), 10))
+	product, err := h.ProductRepository.FindById(c.Request().Context(), strconv.FormatUint(uint64(*id), 10))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
@@ -78,7 +78,7 @@ func (h *Handler) CreateProduct(c echo.Context) error {
 //
 //	@Router			/products [get]
 func (h *Handler) GetAllProducts(c echo.Context) error {
-	products, err := h.ProductService.FindAll(c.Request().Context())
+	products, err := h.ProductRepository.FindAll(c.Request().Context())
 	if err != nil {
 		return err
 	}
@@ -116,7 +116,7 @@ func (h *Handler) GetById(c echo.Context) error {
 		return err
 	}
 
-	product, err := h.ProductService.FindById(c.Request().Context(), p.ID)
+	product, err := h.ProductRepository.FindById(c.Request().Context(), p.ID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

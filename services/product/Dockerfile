@@ -10,7 +10,7 @@ COPY ./services ./services
 
 RUN go mod download
 
-RUN go build -o /product-service ./services/product
+RUN go build -o /product-service ./services/product/cmd
 
 FROM gcr.io/distroless/base-debian11 AS build-release-stage
 

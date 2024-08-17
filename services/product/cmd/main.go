@@ -22,10 +22,12 @@ func init() {
 
 //	@title			Product Service
 //	@version		2.0
-//	@description	This is the spots service
+//	@description	This is the product service
 
 // @host	localhost:1323
 func main() {
+	publicKey := shared.LoadPublicKey()
+
 	connStr := shared.GetConnectionString()
 
 	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
@@ -47,6 +49,7 @@ func main() {
 	handler.NewHandler(&handler.HandlerConfig{
 		E:                 s,
 		ProductRepository: productRepository,
+		PublicKey:         publicKey,
 	})
 
 	s.Logger.Fatal(s.Start(":1323"))

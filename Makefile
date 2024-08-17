@@ -4,11 +4,15 @@
 all: db start
 
 # Start services
-start: product
+start: product auth
 
 # Start product with hot reload
 product:
 	cd services/product && air
+
+# Start auth with hot reload
+auth:
+	cd services/auth && air
 
 # Start databases using Docker Compose
 db:
