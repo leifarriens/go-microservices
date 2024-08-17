@@ -10,7 +10,9 @@ import (
 )
 
 type ProductRepository interface {
+	Create(ctx context.Context, product *model.Product) (*uint, error)
 	FindAll(ctx context.Context) ([]*model.Product, error)
+	FindById(ctx context.Context, id string) (*model.Product, error)
 }
 
 type productRepository struct {
@@ -27,6 +29,17 @@ func NewProductRepository(db *gorm.DB) ProductRepository {
 	return &productRepository{db: db}
 }
 
+func (r *productRepository) Create(ctx context.Context, product *model.Product) (*uint, error) {
+	result := r.db.Create(&product)
+
+	err := result.Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &product.ID, nil
+}
+
 func (r *productRepository) FindAll(ctx context.Context) ([]*model.Product, error) {
 	var products []*model.Product
 
@@ -35,6 +48,14 @@ func (r *productRepository) FindAll(ctx context.Context) ([]*model.Product, erro
 	amount := result.RowsAffected
 
 	fmt.Printf("All: %d\n", amount)
+
+	return products, nil
+}
+
+func (r *productRepository) FindById(ctx context.Context, id string) (*model.Product, error) {
+	var products *model.Product
+
+	r.db.First(&products, id)
 
 	return products, nil
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/leifarriens/go-microservices/internal/shared"
+	_ "github.com/leifarriens/go-microservices/services/product/docs"
 	"github.com/leifarriens/go-microservices/services/product/handler"
 	"github.com/leifarriens/go-microservices/services/product/repository"
 	_ "github.com/lib/pq"
@@ -15,10 +16,15 @@ import (
 func init() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Println(err)
 	}
 }
 
+//	@title			Product Service
+//	@version		2.0
+//	@description	This is the spots service
+
+// @host	localhost:1323
 func main() {
 	connStr := shared.GetConnectionString()
 
@@ -30,7 +36,12 @@ func main() {
 	productRepository := repository.NewProductRepository(db)
 
 	s := shared.Server(&shared.ServerConfig{
-		KeyAuth: true,
+		Validator: true,
+		KeyAuth:   false,
+		Swagger:   true,
+		AllowOrigins: []string{
+			"http://localhost:5173",
+		},
 	})
 
 	handler.NewHandler(&handler.HandlerConfig{

@@ -19,7 +19,9 @@ func NewHandler(config *HandlerConfig) *Handler {
 		ProductService: config.ProductRepository,
 	}
 
+	config.E.POST("/products", h.CreateProduct)
 	config.E.GET("/products", h.GetAllProducts)
+	config.E.GET("/products/:id", h.GetById)
 
 	return h
 }
