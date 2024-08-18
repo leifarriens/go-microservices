@@ -1,22 +1,16 @@
 package model
 
 import (
-	"gorm.io/gorm"
+	"time"
 )
 
-// TODO: use one single truct for db and api
 type Product struct {
-	gorm.Model
-	Name      string  `json:"name"`
-	Price     float64 `json:"price"`
-	Available bool    `json:"available"`
-}
-
-type ProductResponse struct {
-	ID        uint    `json:"id"`
-	Name      string  `json:"name"`
-	Price     float64 `json:"price"`
-	Available bool    `json:"available"`
+	ID        uint      `gorm:"primarykey" json:"id"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	Name      string    `json:"name"`
+	Price     float64   `json:"price"`
+	Available bool      `json:"available"`
 }
 
 type ProductDto struct {

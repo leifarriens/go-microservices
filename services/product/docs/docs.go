@@ -34,7 +34,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.ProductResponse"
+                                "$ref": "#/definitions/model.Product"
                             }
                         }
                     },
@@ -85,7 +85,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.ProductResponse"
+                            "$ref": "#/definitions/model.Product"
                         }
                     },
                     "400": {
@@ -135,7 +135,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.ProductResponse"
+                            "$ref": "#/definitions/model.Product"
                         }
                     },
                     "400": {
@@ -161,6 +161,37 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.Product": {
+            "type": "object",
+            "required": [
+                "available",
+                "createdAt",
+                "id",
+                "name",
+                "price",
+                "updatedAt"
+            ],
+            "properties": {
+                "available": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "model.ProductDto": {
             "type": "object",
             "required": [
@@ -171,29 +202,6 @@ const docTemplate = `{
             "properties": {
                 "available": {
                     "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                }
-            }
-        },
-        "model.ProductResponse": {
-            "type": "object",
-            "required": [
-                "available",
-                "id",
-                "name",
-                "price"
-            ],
-            "properties": {
-                "available": {
-                    "type": "boolean"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "name": {
                     "type": "string"

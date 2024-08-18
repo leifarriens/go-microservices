@@ -19,7 +19,7 @@ import (
 //	@Produce		json
 //
 //	@Param			product	body		model.ProductDto	true	"The input product struct"
-//	@Success		200		{object}	model.ProductResponse
+//	@Success		200		{object}	model.Product
 //
 //	@failure		400		{string}	string	"error"
 //	@failure		404		{string}	string	"error"
@@ -60,7 +60,7 @@ func (h *Handler) CreateProduct(c echo.Context) error {
 //	@Tags			product
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{array}		model.ProductResponse
+//	@Success		200	{array}		model.Product
 //
 //	@failure		400	{string}	string	"error"
 //	@failure		404	{string}	string	"error"
@@ -88,7 +88,7 @@ type GetByIdParams struct {
 //	@Accept			json
 //	@Produce		json
 //	@Param			id	path		string	true	"Product ID"
-//	@Success		200	{object}	model.ProductResponse
+//	@Success		200	{object}	model.Product
 //
 //	@failure		400	{string}	string	"error"
 //	@failure		404	{string}	string	"error"
