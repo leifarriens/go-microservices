@@ -24,6 +24,7 @@ func NewHandler(config *HandlerConfig) *Handler {
 	}
 
 	config.E.POST("/authenticate", h.Authenticate)
+	config.E.POST("/logout", h.Logout)
 	config.E.GET("/restricted", h.Restricted, shared.Authorize(h.TokenService.GetPublicKey()))
 
 	return h

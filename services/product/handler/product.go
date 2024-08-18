@@ -1,19 +1,14 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/leifarriens/go-microservices/services/product/model"
+	"github.com/leifarriens/go-microservices/services/product/service"
 	_ "gorm.io/gorm"
 )
-
-type CreateProductParams struct {
-	Name      string  `json:"name" validate:"required"`
-	Price     float64 `json:"price" validate:"required"`
-	Available bool    `json:"available" validate:"required"`
-}
 
 // CreateProduct godoc
 //
@@ -32,7 +27,7 @@ type CreateProductParams struct {
 //
 //	@Router			/products [post]
 func (h *Handler) CreateProduct(c echo.Context) error {
-	var p CreateProductParams
+	var p model.ProductDto
 
 	if err := c.Bind(&p); err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
@@ -42,16 +37,11 @@ func (h *Handler) CreateProduct(c echo.Context) error {
 		return err
 	}
 
-	id, err := h.ProductRepository.Create(c.Request().Context(), &model.Product{
+	product, err := h.ProductService.Add(c.Request().Context(), &model.ProductDto{
 		Name:      p.Name,
 		Price:     p.Price,
 		Available: p.Available,
 	})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	product, err := h.ProductRepository.FindById(c.Request().Context(), strconv.FormatUint(uint64(*id), 10))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
@@ -78,7 +68,7 @@ func (h *Handler) CreateProduct(c echo.Context) error {
 //
 //	@Router			/products [get]
 func (h *Handler) GetAllProducts(c echo.Context) error {
-	products, err := h.ProductRepository.FindAll(c.Request().Context())
+	products, err := h.ProductService.Get(c.Request().Context())
 	if err != nil {
 		return err
 	}
@@ -116,13 +106,12 @@ func (h *Handler) GetById(c echo.Context) error {
 		return err
 	}
 
-	product, err := h.ProductRepository.FindById(c.Request().Context(), p.ID)
+	product, err := h.ProductService.GetById(c.Request().Context(), p.ID)
 	if err != nil {
+		if errors.Is(err, service.ErrProductNotFound) {
+			return echo.NewHTTPError(http.StatusNotFound, "Product not found")
+		}
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	if product == nil {
-		return echo.NewHTTPError(http.StatusNotFound, "Product not found")
 	}
 
 	return c.JSON(http.StatusOK, product)

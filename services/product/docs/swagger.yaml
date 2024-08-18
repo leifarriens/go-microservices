@@ -31,7 +31,7 @@ definitions:
 host: localhost:1323
 info:
   contact: {}
-  description: This is the spots service
+  description: This is the product service
   title: Product Service
   version: "2.0"
 paths:

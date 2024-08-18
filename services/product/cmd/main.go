@@ -4,10 +4,13 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/leifarriens/go-microservices/internal/shared"
 	_ "github.com/leifarriens/go-microservices/services/product/docs"
 	"github.com/leifarriens/go-microservices/services/product/handler"
 	"github.com/leifarriens/go-microservices/services/product/repository"
+	"github.com/leifarriens/go-microservices/services/product/service"
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -37,19 +40,24 @@ func main() {
 
 	productRepository := repository.NewProductRepository(db)
 
+	productService := service.NewProductService(&service.ProductServiceConfig{
+		ProductRepository: productRepository,
+	})
+
 	s := shared.Server(&shared.ServerConfig{
 		Validator: true,
-		KeyAuth:   false,
 		Swagger:   true,
-		AllowOrigins: []string{
-			"http://localhost:5173",
+		CORSConfig: &middleware.CORSConfig{
+			// https://echo.labstack.com/docs/cookbook/cors#server-using-a-custom-function-to-allow-origins
+			AllowOrigins: []string{"http://localhost:5173"},
+			AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		},
 	})
 
 	handler.NewHandler(&handler.HandlerConfig{
-		E:                 s,
-		ProductRepository: productRepository,
-		PublicKey:         publicKey,
+		E:              s,
+		ProductService: productService,
+		PublicKey:      publicKey,
 	})
 
 	s.Logger.Fatal(s.Start(":1323"))

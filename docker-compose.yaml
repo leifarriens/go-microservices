@@ -12,5 +12,32 @@ services:
     volumes:
       - db_product_data:/var/lib/postgresql/data
 
+  # auth-service:
+  #   build:
+  #     context: .
+  #     dockerfile: ./services/auth/Dockerfile
+  #   volumes:
+  #     - ./rsa_private.pem:/services/auth/rsa_private.pem:ro
+  #     - ./rsa_public.pem:/services/auth/rsa_public.pem:ro
+  #   ports:
+  #     - '1324:1324'
+
+  # product-service:
+  #   build:
+  #     context: .
+  #     dockerfile: ./services/product/Dockerfile
+  #   ports:
+  #     - '1323:1323'
+  #   depends_on:
+  #     - db_product
+  #   volumes:
+  #     - ./rsa_public.pem:/services/product/rsa_public.pem:ro
+  #   environment:
+  #     DB_USER: user1
+  #     DB_PASSWORD: password1
+  #     DB_NAME: product_db
+  #     DB_HOST: db_product
+  #     DB_PORT: 5432
+
 volumes:
   db_product_data:

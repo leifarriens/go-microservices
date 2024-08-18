@@ -7,11 +7,10 @@ import (
 )
 
 type ServerConfig struct {
-	Port         int8
-	Validator    bool
-	KeyAuth      bool
-	Swagger      bool
-	AllowOrigins []string
+	Port       int8
+	Validator  bool
+	Swagger    bool
+	CORSConfig *middleware.CORSConfig
 }
 
 func Server(config *ServerConfig) *echo.Echo {
@@ -24,25 +23,12 @@ func Server(config *ServerConfig) *echo.Echo {
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
 
-	if len(config.AllowOrigins) > 0 {
-		e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-			AllowOrigins: config.AllowOrigins,
-			AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-		}))
+	if config.CORSConfig != nil {
+		e.Use(middleware.CORSWithConfig(*config.CORSConfig))
 	}
 
 	if config.Validator {
 		e.Validator = NewValidator()
-	}
-
-	if config.KeyAuth {
-		e.Use(middleware.KeyAuthWithConfig(middleware.KeyAuthConfig{
-			KeyLookup:  "header:" + echo.HeaderAuthorization,
-			AuthScheme: "Bearer",
-			Validator: func(key string, c echo.Context) (bool, error) {
-				return key == "valid-key", nil
-			},
-		}))
 	}
 
 	if config.Swagger {

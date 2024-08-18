@@ -53,9 +53,12 @@ func (r *productRepository) FindAll(ctx context.Context) ([]*model.Product, erro
 }
 
 func (r *productRepository) FindById(ctx context.Context, id string) (*model.Product, error) {
-	var products *model.Product
+	var products model.Product
 
-	r.db.First(&products, id)
+	result := r.db.First(&products, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
 
-	return products, nil
+	return &products, nil
 }
