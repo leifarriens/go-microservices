@@ -6,6 +6,7 @@ COPY go.work go.work.sum ./
 COPY ./internal/shared/go.mod ./internal/shared/go.sum ./internal/shared/
 COPY ./services/auth/go.mod ./services/auth/go.sum ./services/auth/
 COPY ./services/product/go.mod ./services/product/go.sum ./services/product/
+COPY ./services/ping/go.mod ./services/ping/
 
 RUN --mount=type=cache,target=/go/pkg/mod \
   --mount=type=cache,target=/root/.cache/go-build \

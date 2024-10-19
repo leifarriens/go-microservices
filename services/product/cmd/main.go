@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -25,8 +27,6 @@ func main() {
 	publicKey := shared.LoadPublicKey()
 
 	connStr := shared.GetDBConnectionString()
-
-	fmt.Println(connStr)
 
 	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
@@ -55,7 +55,13 @@ func main() {
 		PublicKey:      publicKey,
 	})
 
-	fmt.Println("HEllo")
+	s.GET("/ping", func(c echo.Context) error {
+		var dbTime time.Time
+
+		db.Raw("SELECT NOW()").Scan(&dbTime)
+
+		return c.JSON(http.StatusOK, fmt.Sprintf("OK %s", dbTime))
+	})
 
 	s.Logger.Fatal(s.Start(":1324"))
 }

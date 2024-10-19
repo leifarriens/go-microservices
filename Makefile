@@ -1,10 +1,10 @@
 .PHONY: all start stop product db
 
 run:
-	docker-compose up
+	docker-compose up --build
 
 run-dev:
-	docker-compose -f docker-compose.dev.yaml up 
+	docker-compose -f docker-compose.dev.yaml up --build
 
 # Stop all services and databases
 stop:

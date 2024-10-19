@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/leifarriens/go-microservices/services/product/model"
@@ -43,11 +42,7 @@ func (r *productRepository) Create(ctx context.Context, product *model.Product) 
 func (r *productRepository) FindAll(ctx context.Context) ([]*model.Product, error) {
 	var products []*model.Product
 
-	result := r.db.Find(&products)
-
-	amount := result.RowsAffected
-
-	fmt.Printf("All: %d\n", amount)
+	r.db.Find(&products)
 
 	return products, nil
 }

@@ -14,31 +14,28 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 
 FROM build-base AS dev
 
-RUN go install github.com/cosmtrek/air@v1.43.0 && \
-  go install github.com/swaggo/swag/cmd/swag@v1.16.4
+RUN go install github.com/cosmtrek/air@v1.43.0
 
-COPY ./internal ./internal
-COPY ./services ./services
+COPY ./services/ping ./services/ping
 
-WORKDIR /app/services/product
+WORKDIR /app/services/ping
 
 CMD ["air", "-c", ".air.toml"]
 
 FROM build-base AS build-prod
 
-COPY ./internal ./internal
-COPY ./services ./services
+COPY ./services/ping ./services/ping
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags='-s' -x -o /product-service ./services/product/cmd
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags='-s' -x -o /ping-service ./services/ping/cmd
 
 FROM gcr.io/distroless/base-debian11 AS prod
 
 WORKDIR /
 
-COPY --from=build-prod ./product-service ./product-service
+COPY --from=build-prod ./ping-service ./ping-service
 
 ENV ENVIRONMENT=container
 
 EXPOSE 1324
 
-CMD ["./product-service"]
+CMD ["./ping-service"]

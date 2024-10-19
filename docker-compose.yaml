@@ -44,6 +44,21 @@ services:
       - '1324:1324'
     restart: unless-stopped
 
+  ping-service:
+    image: ping-service
+    build:
+      context: .
+      dockerfile: ./services/ping/Dockerfile
+      target: prod
+    init: true
+    depends_on:
+      - product-service
+    environment:
+      - URL=http://product-service:1324/ping
+    networks:
+      - backend
+    restart: unless-stopped
+
 volumes:
   db_product:
 networks:

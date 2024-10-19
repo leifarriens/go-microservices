@@ -4,17 +4,10 @@ tmp_dir = "tmp"
 
 [build]
   args_bin = []
-  bin = "./tmp/bin/auth-service"
-  cmd = """
-    swag init \
-      --dir ./cmd,./handler/ \
-      --generalInfo main.go \
-      --requiredByDefault \
-      --outputTypes yaml,go \
-    && go build -o=./tmp/bin/auth-service ./cmd/main.go
-  """
+  bin = "./tmp/bin/ping-service"
+  cmd = "go build -o=./tmp/bin/ping-service ./cmd/main.go"
   delay = 1000
-  exclude_dir = ["assets", "tmp", "vendor", "testdata", "docs"]
+  exclude_dir = ["assets", "tmp", "vendor", "testdata"]
   exclude_file = []
   exclude_regex = ["_test.go"]
   exclude_unchanged = false
