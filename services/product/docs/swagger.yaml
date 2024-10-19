@@ -34,7 +34,7 @@ definitions:
     - name
     - price
     type: object
-host: localhost:1323
+host: localhost:1324
 info:
   contact: {}
   description: This is the product service

@@ -2,7 +2,7 @@ services:
   db_product:
     image: postgres:15.1-alpine
     volumes:
-      - db_product:/var/lib/postgresql/data
+      - product_db_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=secret
     networks:
@@ -18,6 +18,9 @@ services:
       target: dev
     init: true
     volumes:
+      - type: bind
+        source: .
+        target: /app/
       - ./rsa_public.pem:/app/services/auth/rsa_public.pem:ro
       - ./rsa_private.pem:/app/services/auth/rsa_private.pem:ro
     networks:
@@ -25,14 +28,18 @@ services:
     ports:
       - '1323:1323'
     restart: unless-stopped
+
   product-service:
     image: product-service
     build:
       context: .
       dockerfile: ./services/product/Dockerfile
-      target: prod
+      target: dev
     init: true
     volumes:
+      - type: bind
+        source: .
+        target: /app/
       - ./rsa_public.pem:/app/services/product/rsa_public.pem:ro
     depends_on:
       - db_product
@@ -45,6 +52,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  db_product:
+  product_db_data:
 networks:
   backend:

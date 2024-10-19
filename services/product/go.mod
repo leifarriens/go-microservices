@@ -3,7 +3,6 @@ module github.com/leifarriens/go-microservices/services/product
 go 1.22.1
 
 require (
-	github.com/joho/godotenv v1.5.1
 	github.com/leifarriens/go-microservices/internal/shared v0.0.0
 	github.com/lib/pq v1.10.9
 	github.com/swaggo/swag v1.16.3

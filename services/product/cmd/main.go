@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/leifarriens/go-microservices/internal/shared"
@@ -16,22 +16,17 @@ import (
 	"gorm.io/gorm"
 )
 
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Println(err)
-	}
-}
-
 //	@title			Product Service
 //	@version		2.0
 //	@description	This is the product service
 
-// @host	localhost:1323
+// @host	localhost:1324
 func main() {
 	publicKey := shared.LoadPublicKey()
 
-	connStr := shared.GetConnectionString()
+	connStr := shared.GetDBConnectionString()
+
+	fmt.Println(connStr)
 
 	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
@@ -60,7 +55,9 @@ func main() {
 		PublicKey:      publicKey,
 	})
 
-	s.Logger.Fatal(s.Start(":1323"))
+	fmt.Println("HEllo")
+
+	s.Logger.Fatal(s.Start(":1324"))
 }
 
 // func seed(db *gorm.DB) {
